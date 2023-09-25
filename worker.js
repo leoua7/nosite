@@ -1,7 +1,7 @@
 /* CONFIGURATION STARTS HERE */
-
+  
 /* Step 1: enter your domain name like fruitionsite.com */
-const MY_DOMAIN = "yaogl.moe";
+const MY_DOMAIN = 'mcore.yaogl.moe';
 
 /*
  * Step 2: enter your URL slug to page ID mapping
@@ -9,40 +9,39 @@ const MY_DOMAIN = "yaogl.moe";
  * The value on the right is the Notion page ID
  */
 const SLUG_TO_PAGE = {
-  "": "37b7f61f709a4a35821d3089d365b5cb",
-  mcore: "dbaae48717bc4e9f8d5518caf55c4238",
-  algorithm: "99640d0d83a346d1bb4b9e78cc165fa4",
-  anime: "10a3041586cc4c88aaa0c1e6cccc3a03",
-  games: "9e8b64970cdd453b9531242725ca390a",
-  "anime/april": "634b7d443a464c81884ffda6983ed29a",
-  warface: "b8c2ac6660ad4269a49091515d443d86",
-  specialops: "478397587ee448b1b9b0bd75346f1c6d",
+  '': 'dbaae48717bc4e9f8d5518caf55c4238',
 };
 
 /* Step 3: enter your page title and description for SEO purposes */
-const PAGE_TITLE = "";
-const PAGE_DESCRIPTION = "";
+const PAGE_TITLE = '';
+const PAGE_DESCRIPTION = '';
 
 /* Step 4: enter a Google Font name, you can choose from https://fonts.google.com */
-const GOOGLE_FONT = "";
+const GOOGLE_FONT = '';
 
 /* Step 5: enter any custom scripts you'd like */
 const CUSTOM_SCRIPT = ``;
-const CUSTOM_STYLE = ``;
+const CUSTOM_CSS = `
+<style>
+// .notion-frame {
+//   background: linear-gradient(#DED6C7 0%, #F0F0F0 100%) !important;
+// }
+</style>
+`;
 
 /* CONFIGURATION ENDS HERE */
 
 const PAGE_TO_SLUG = {};
 const slugs = [];
 const pages = [];
-Object.keys(SLUG_TO_PAGE).forEach((slug) => {
+Object.keys(SLUG_TO_PAGE).forEach(slug => {
   const page = SLUG_TO_PAGE[slug];
   slugs.push(slug);
   pages.push(page);
   PAGE_TO_SLUG[page] = slug;
 });
 
-addEventListener("fetch", (event) => {
+addEventListener('fetch', event => {
   event.respondWith(fetchAndApply(event.request));
 });
 
@@ -51,92 +50,73 @@ function generateSitemap() {
   slugs.forEach(
     (slug) =>
       (sitemap +=
-        "<url><loc>https://" + MY_DOMAIN + "/" + slug + "</loc></url>")
+        '<url><loc>https://' + MY_DOMAIN + '/' + slug + '</loc></url>')
   );
-  sitemap += "</urlset>";
+  sitemap += '</urlset>';
   return sitemap;
 }
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, HEAD, POST, PUT, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, HEAD, POST, PUT, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
 
 function handleOptions(request) {
-  if (
-    request.headers.get("Origin") !== null &&
-    request.headers.get("Access-Control-Request-Method") !== null &&
-    request.headers.get("Access-Control-Request-Headers") !== null
-  ) {
+  if (request.headers.get('Origin') !== null &&
+    request.headers.get('Access-Control-Request-Method') !== null &&
+    request.headers.get('Access-Control-Request-Headers') !== null) {
     // Handle CORS pre-flight request.
     return new Response(null, {
-      headers: corsHeaders,
+      headers: corsHeaders
     });
   } else {
     // Handle standard OPTIONS request.
     return new Response(null, {
       headers: {
-        Allow: "GET, HEAD, POST, PUT, OPTIONS",
-      },
+        'Allow': 'GET, HEAD, POST, PUT, OPTIONS',
+      }
     });
   }
 }
 
 async function fetchAndApply(request) {
-  if (request.method === "OPTIONS") {
+  if (request.method === 'OPTIONS') {
     return handleOptions(request);
   }
   let url = new URL(request.url);
-  url.hostname = "www.notion.so";
-  if (url.pathname === "/robots.txt") {
-    return new Response("Sitemap: https://" + MY_DOMAIN + "/sitemap.xml");
+  url.hostname = 'www.notion.so';
+  if (url.pathname === '/robots.txt') {
+    return new Response('Sitemap: https://' + MY_DOMAIN + '/sitemap.xml');
   }
-  if (url.pathname === "/sitemap.xml") {
+  if (url.pathname === '/sitemap.xml') {
     let response = new Response(generateSitemap());
-    response.headers.set("content-type", "application/xml");
+    response.headers.set('content-type', 'application/xml');
     return response;
   }
   let response;
-  if (url.pathname.startsWith("/app") && url.pathname.endsWith("js")) {
+  if (url.pathname.startsWith('/app') && url.pathname.endsWith('js')) {
     response = await fetch(url.toString());
     let body = await response.text();
-    response = new Response(
-      body
-        .replace(/www.notion.so/g, MY_DOMAIN)
-        .replace(/notion.so/g, MY_DOMAIN),
-      response
-    );
-    response.headers.set("Content-Type", "application/x-javascript");
+    response = new Response(body.replace(/www.notion.so/g, MY_DOMAIN).replace(/notion.so/g, MY_DOMAIN), response);
+    response.headers.set('Content-Type', 'application/x-javascript');
     return response;
-  } else if (url.pathname.startsWith("/api")) {
+  } else if ((url.pathname.startsWith('/api'))) {
     // Forward API
     response = await fetch(url.toString(), {
-      body: url.pathname.startsWith("/api/v3/getPublicPageData")
-        ? null
-        : request.body,
+      body: url.pathname.startsWith('/api/v3/getPublicPageData') ? null : request.body,
       headers: {
-        "content-type": "application/json;charset=UTF-8",
-        "user-agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36",
+        'content-type': 'application/json;charset=UTF-8',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'
       },
-      method: "POST",
+      method: 'POST',
     });
     response = new Response(response.body, response);
-    response.headers.set("Access-Control-Allow-Origin", "*");
-    return response;
-  } else if (url.pathname.endsWith(".js")) {
-    response = await fetch(url.toString());
-    response.headers.set("Content-Type", "application/x-javascript");
+    response.headers.set('Access-Control-Allow-Origin', '*');
     return response;
   } else if (slugs.indexOf(url.pathname.slice(1)) > -1) {
     const pageId = SLUG_TO_PAGE[url.pathname.slice(1)];
-    return Response.redirect("https://" + MY_DOMAIN + "/" + pageId, 301);
-  } else if (
-    pages.indexOf(url.pathname.slice(1)) === -1 &&
-    url.pathname.slice(1).match(/[0-9a-f]{32}/)
-  ) {
-    return Response.redirect("https://" + MY_DOMAIN, 301);
+    return Response.redirect('https://' + MY_DOMAIN + '/' + pageId, 301);
   } else {
     response = await fetch(url.toString(), {
       body: request.body,
@@ -144,8 +124,8 @@ async function fetchAndApply(request) {
       method: request.method,
     });
     response = new Response(response.body, response);
-    response.headers.delete("Content-Security-Policy");
-    response.headers.delete("X-Content-Security-Policy");
+    response.headers.delete('Content-Security-Policy');
+    response.headers.delete('X-Content-Security-Policy');
   }
 
   return appendJavascript(response, SLUG_TO_PAGE);
@@ -153,33 +133,27 @@ async function fetchAndApply(request) {
 
 class MetaRewriter {
   element(element) {
-    if (PAGE_TITLE !== "") {
-      if (
-        element.getAttribute("property") === "og:title" ||
-        element.getAttribute("name") === "twitter:title"
-      ) {
-        element.setAttribute("content", PAGE_TITLE);
+    if (PAGE_TITLE !== '') {
+      if (element.getAttribute('property') === 'og:title'
+        || element.getAttribute('name') === 'twitter:title') {
+        element.setAttribute('content', PAGE_TITLE);
       }
-      if (element.tagName === "title") {
+      if (element.tagName === 'title') {
         element.setInnerContent(PAGE_TITLE);
       }
     }
-    if (PAGE_DESCRIPTION !== "") {
-      if (
-        element.getAttribute("name") === "description" ||
-        element.getAttribute("property") === "og:description" ||
-        element.getAttribute("name") === "twitter:description"
-      ) {
-        element.setAttribute("content", PAGE_DESCRIPTION);
+    if (PAGE_DESCRIPTION !== '') {
+      if (element.getAttribute('name') === 'description'
+        || element.getAttribute('property') === 'og:description'
+        || element.getAttribute('name') === 'twitter:description') {
+        element.setAttribute('content', PAGE_DESCRIPTION);
       }
     }
-    if (
-      element.getAttribute("property") === "og:url" ||
-      element.getAttribute("name") === "twitter:url"
-    ) {
-      element.setAttribute("content", MY_DOMAIN);
+    if (element.getAttribute('property') === 'og:url'
+      || element.getAttribute('name') === 'twitter:url') {
+      element.setAttribute('content', MY_DOMAIN);
     }
-    if (element.getAttribute("name") === "apple-itunes-app") {
+    if (element.getAttribute('name') === 'apple-itunes-app') {
       element.remove();
     }
   }
@@ -187,33 +161,24 @@ class MetaRewriter {
 
 class HeadRewriter {
   element(element) {
-    if (GOOGLE_FONT !== "") {
-      element.append(
-        `<link href='https://fonts.googleapis.com/css?family=${GOOGLE_FONT.replace(
-          " ",
-          "+"
-        )}:Regular,Bold,Italic&display=swap' rel='stylesheet'>
-        <style>* { font-family: "${GOOGLE_FONT}" !important; }</style>`,
-        {
-          html: true,
-        }
-      );
+    if (GOOGLE_FONT !== '') {
+      element.append(`<link href="https://fonts.googleapis.com/css?family=${GOOGLE_FONT.replace(' ', '+')}:Regular,Bold,Italic&display=swap" rel="stylesheet">
+      <style>* { font-family: "${GOOGLE_FONT}" !important; }</style>`, {
+        html: true
+      });
     }
-    element.append(
-      `<style>
-      div.notion-topbar > div > div:nth-child(3) { display: none !important; }
-      div.notion-topbar > div > div:nth-child(4) { display: none !important; }
-      div.notion-topbar > div > div:nth-child(5) { display: none !important; }
-      div.notion-topbar > div > div:nth-child(6) { display: none !important; }
-      div.notion-topbar-mobile > div:nth-child(3) { display: none !important; }
-      div.notion-topbar-mobile > div:nth-child(4) { display: none !important; }
-      div.notion-topbar > div > div:nth-child(1n).toggle-mode { display: block !important; }
-      div.notion-topbar-mobile > div:nth-child(1n).toggle-mode { display: block !important; }
-      </style>`,
-      {
-        html: true,
-      }
-    );
+    element.append(`<style>
+    div.notion-topbar > div > div:nth-child(3) { display: none !important; }
+    div.notion-topbar > div > div:nth-child(4) { display: none !important; }
+    div.notion-topbar > div > div:nth-child(5) { display: none !important; }
+    div.notion-topbar > div > div:nth-child(6) { display: none !important; }
+    div.notion-topbar-mobile > div:nth-child(3) { display: none !important; }
+    div.notion-topbar-mobile > div:nth-child(4) { display: none !important; }
+    div.notion-topbar > div > div:nth-child(1n).toggle-mode { display: block !important; }
+    div.notion-topbar-mobile > div:nth-child(1n).toggle-mode { display: block !important; }
+    </style>`, {
+      html: true
+    })
   }
 }
 
@@ -222,21 +187,21 @@ class BodyRewriter {
     this.SLUG_TO_PAGE = SLUG_TO_PAGE;
   }
   element(element) {
-    element.append(
-      `<script>
-      window.CONFIG.domainBaseUrl = 'https://${MY_DOMAIN}';
-      const SLUG_TO_PAGE = ${JSON.stringify(this.SLUG_TO_PAGE)};
-      const PAGE_TO_SLUG = {};
-      const slugs = [];
-      const pages = [];
-      const el = document.createElement('div');
-      let redirected = false;
-      Object.keys(SLUG_TO_PAGE).forEach(slug => {
-        const page = SLUG_TO_PAGE[slug];
-        slugs.push(slug);
-        pages.push(page);
-        PAGE_TO_SLUG[page] = slug;
-      });
+    element.append(`<div style="display:none">Powered by <a href="http://fruitionsite.com">Fruition</a></div>
+    <script>
+    window.CONFIG.domainBaseUrl = 'https://${MY_DOMAIN}';
+    const SLUG_TO_PAGE = ${JSON.stringify(this.SLUG_TO_PAGE)};
+    const PAGE_TO_SLUG = {};
+    const slugs = [];
+    const pages = [];
+    const el = document.createElement('div');
+    let redirected = false;
+    Object.keys(SLUG_TO_PAGE).forEach(slug => {
+      const page = SLUG_TO_PAGE[slug];
+      slugs.push(slug);
+      pages.push(page);
+      PAGE_TO_SLUG[page] = slug;
+    });
     function getPage() {
       return location.pathname.slice(-32);
     }
@@ -255,7 +220,6 @@ class BodyRewriter {
       __console.environment.ThemeStore.setState({ mode: 'dark' });
     };
     function onLight() {
-      if (!__console.isEnabled) __console.enable();
       el.innerHTML = '<div title="Change to Dark Mode" style="margin-left: auto; margin-right: 14px; min-width: 0px;"><div role="button" tabindex="0" style="user-select: none; transition: background 120ms ease-in 0s; cursor: pointer; border-radius: 44px;"><div style="display: flex; flex-shrink: 0; height: 14px; width: 26px; border-radius: 44px; padding: 2px; box-sizing: content-box; background: rgba(135, 131, 120, 0.3); transition: background 200ms ease 0s, box-shadow 200ms ease 0s;"><div style="width: 14px; height: 14px; border-radius: 44px; background: white; transition: transform 200ms ease-out 0s, background 200ms ease-out 0s; transform: translateX(0px) translateY(0px);"></div></div></div></div>';
       document.body.classList.remove('dark');
       __console.environment.ThemeStore.setState({ mode: 'light' });
@@ -272,18 +236,7 @@ class BodyRewriter {
       el.className = 'toggle-mode';
       el.addEventListener('click', toggle);
       nav.appendChild(el);
-
-      // enable smart dark mode based on user-preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        onDark();
-      } else {
-        onLight();
-      }
-
-      // try to detect if user-preference change
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        toggle();
-      });
+      onLight();
     }
     const observer = new MutationObserver(function() {
       if (redirected) return;
@@ -330,19 +283,17 @@ class BodyRewriter {
       arguments[1] = arguments[1].replace('${MY_DOMAIN}', 'www.notion.so');
       return open.apply(this, [].slice.call(arguments));
     };
-    </script>${CUSTOM_SCRIPT}${CUSTOM_STYLE}`,
-      {
-        html: true,
-      }
-    );
+  </script>${CUSTOM_SCRIPT}${CUSTOM_CSS}`, {
+      html: true
+    });
   }
 }
 
 async function appendJavascript(res, SLUG_TO_PAGE) {
   return new HTMLRewriter()
-    .on("title", new MetaRewriter())
-    .on("meta", new MetaRewriter())
-    .on("head", new HeadRewriter())
-    .on("body", new BodyRewriter(SLUG_TO_PAGE))
+    .on('title', new MetaRewriter())
+    .on('meta', new MetaRewriter())
+    .on('head', new HeadRewriter())
+    .on('body', new BodyRewriter(SLUG_TO_PAGE))
     .transform(res);
 }

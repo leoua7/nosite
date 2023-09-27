@@ -225,6 +225,7 @@ class BodyRewriter {
       __console.environment.ThemeStore.setState({ mode: 'light' });
     }
     function toggle() {
+      if (!__console.isEnabled) __console.enable();
       if (document.body.classList.contains('dark')) {
         onLight();
       } else {

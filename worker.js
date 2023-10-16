@@ -9,7 +9,14 @@ const MY_DOMAIN = 'moe.yaogl.moe';
  * The value on the right is the Notion page ID
  */
 const SLUG_TO_PAGE = {
-  '': 'dbaae48717bc4e9f8d5518caf55c4238',
+  "": "37b7f61f709a4a35821d3089d365b5cb",
+  "mcore": "dbaae48717bc4e9f8d5518caf55c4238",
+  "algorithm": "99640d0d83a346d1bb4b9e78cc165fa4",
+  "anime": "10a3041586cc4c88aaa0c1e6cccc3a03",
+  "games": "9e8b64970cdd453b9531242725ca390a",
+  "anime/april": "634b7d443a464c81884ffda6983ed29a",
+  "warface": "478397587ee448b1b9b0bd75346f1c6d",
+  "specialops": "478397587ee448b1b9b0bd75346f1c6d"
 };
 
 /* Step 3: enter your page title and description for SEO purposes */

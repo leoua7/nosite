@@ -1,7 +1,7 @@
 /* CONFIGURATION STARTS HERE */
   
 /* Step 1: enter your domain name like fruitionsite.com */
-const MY_DOMAIN = 'mcore.yaogl.moe';
+const MY_DOMAIN = 'moe.yaogl.moe';
 
 /*
  * Step 2: enter your URL slug to page ID mapping

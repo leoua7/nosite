@@ -16,7 +16,8 @@ const SLUG_TO_PAGE = {
   "games": "9e8b64970cdd453b9531242725ca390a",
   "anime/april": "634b7d443a464c81884ffda6983ed29a",
   "warface": "478397587ee448b1b9b0bd75346f1c6d",
-  "specialops": "478397587ee448b1b9b0bd75346f1c6d"
+  "specialops": "478397587ee448b1b9b0bd75346f1c6d",
+  "warface-cryengine": "c4360133759946029511f46ad7ac2623"
 };
 
 /* Step 3: enter your page title and description for SEO purposes */

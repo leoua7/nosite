@@ -1,5 +1,5 @@
 /* CONFIGURATION STARTS HERE */
-  
+
 /* Step 1: enter your domain name like fruitionsite.com */
 const MY_DOMAIN = 'moe.yaogl.moe';
 
@@ -57,8 +57,8 @@ function generateSitemap() {
   let sitemap = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
   slugs.forEach(
     (slug) =>
-      (sitemap +=
-        '<url><loc>https://' + MY_DOMAIN + '/' + slug + '</loc></url>')
+    (sitemap +=
+      '<url><loc>https://' + MY_DOMAIN + '/' + slug + '</loc></url>')
   );
   sitemap += '</urlset>';
   return sitemap;
@@ -122,7 +122,7 @@ async function fetchAndApply(request) {
     response = new Response(response.body, response);
     response.headers.set('Access-Control-Allow-Origin', '*');
     return response;
-  } else if (url.pathname.endsWith(".js")){
+  } else if (url.pathname.endsWith(".js")) {
     response = await fetch(url.toString());
     let body = await response.text();
     response = new Response(
@@ -191,6 +191,7 @@ class HeadRewriter {
     div.notion-topbar > div > div:nth-child(6) { display: none !important; }
     /* div.notion-topbar-mobile > div:nth-child(3) { display: none !important; } */
     div.notion-topbar-mobile > div:nth-child(4) { display: none !important; }
+    div.notion-topbar-mobile > div:nth-child(5) { display: none !important; }
     div.notion-topbar > div > div:nth-child(1n).toggle-mode { display: block !important; }
     div.notion-topbar-mobile > div:nth-child(1n).toggle-mode { display: block !important; }
     </style>`, {
